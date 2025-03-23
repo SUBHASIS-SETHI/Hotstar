@@ -2,9 +2,11 @@ package com.example.Hotstar.service;
 
 import com.example.Hotstar.dto.UserRequest;
 import com.example.Hotstar.enums.SubscriptionType;
+import com.example.Hotstar.model.Matches;
 import com.example.Hotstar.model.Subscription;
 import com.example.Hotstar.model.User;
 import com.example.Hotstar.model.Webseries;
+import com.example.Hotstar.repo.MatchesRepo;
 import com.example.Hotstar.repo.UserRepo;
 import com.example.Hotstar.repo.WebseriesRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class UserService {
 
     @Autowired
     WebseriesRepo webseriesRepo;
+
+    @Autowired
+    MatchesRepo matchesRepo;
 
     //Logic
     //1.Adding user into db
@@ -56,7 +61,21 @@ public class UserService {
         userSubscriptionType = userSubscription == null ? SubscriptionType.FREE : userSubscription.getSubscriptionType();
 
         return webseriesRepo.findBySubscriptionTypeAndAgeLimit(userSubscriptionType.name(), userAge);
+    }
+
+    public List<Matches> getAllMatches(int id){
+        Optional<User> optionalUser=userRepo.findById(id);
+        if(optionalUser.isEmpty())throw new RuntimeException("User doesn't exist with this id");
+        User user=optionalUser.get();
+
+        //checking the user subscription type
+        Subscription userSubscription=user.getSubscription();
+        if(userSubscription==null || userSubscription.getSubscriptionType()!=SubscriptionType.ELITE)throw new RuntimeException("User doesn't have Elite subscription to watch matches");
+
+        //if Subscription is ELITE return all the matches list
+        return matchesRepo.findAll();
 
 
     }
+
 }

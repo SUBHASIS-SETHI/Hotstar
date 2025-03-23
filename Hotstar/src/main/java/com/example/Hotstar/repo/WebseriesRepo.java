@@ -19,8 +19,7 @@ public interface WebseriesRepo extends JpaRepository<Webseries,Integer> {
         WHERE w.ageLimit <= :age AND 
               (
                   w.subscriptionType = 'FREE' OR 
-                  (w.subscriptionType = 'PRO' AND :subscriptionType IN ('PRO', 'ELITE')) OR 
-                  (w.subscriptionType = 'ELITE' AND :subscriptionType = 'ELITE')
+                  (w.subscriptionType = 'PRO' AND :subscriptionType IN ('PRO', 'ELITE'))
               )
     """)
     List<Webseries> findBySubscriptionTypeAndAgeLimit(

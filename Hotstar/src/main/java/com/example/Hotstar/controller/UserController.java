@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-@CrossOrigin(origins = "http://127.0.0.1:5500")
+//@CrossOrigin(origins = "http://127.0.0.1:5500")
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -35,5 +35,15 @@ public class UserController {
         }
 
     }
+    @GetMapping("/getAllMatches")
+    public ResponseEntity<?> getAllMatches(@RequestParam("userId") int id){
+        try{
+            return new ResponseEntity<>(userService.getAllMatches(id),HttpStatus.ACCEPTED);
+        }catch(Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
 
 }
